@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CalorieSummary from '../components/CalorieSummary.jsx'
 import MacroCard from '../components/MacroCard.jsx'
 import FoodItem from '../components/FoodItem.jsx'
+import { getFoods } from '../services/foodApi.js'
+  
 
 const Dashboard = () => {
+  const [foods, setFoods] = useState([])
   // Macronutrient data
   const macros = [
     {
@@ -30,26 +33,19 @@ const Dashboard = () => {
   ]
 
   // Food data
-  const [foods, setFoods] = useState([
-    {
-      id: 1,
-      name: 'Oatmeal with banana',
-      meal: 'Breakfast',
-      calories: 350,
-    },
-    {
-      id: 2,
-      name: 'Greek yogurt',
-      meal: 'Breakfast',
-      calories: 120,
-    },
-    {
-      id: 3,
-      name: 'Chicken rice bowl',
-      meal: 'Lunch',
-      calories: 630,
-    },
-  ])
+  useEffect(() => {
+  const fetchFoods = async () => {
+    try {
+      const data = await getFoods()
+
+      setFoods(data)
+    } catch (error) {
+      console.error('Error fetching foods:', error)
+    }
+  }
+
+  fetchFoods()
+}, [])
 
   return (
     <div>
@@ -108,7 +104,7 @@ const Dashboard = () => {
         <div className="mt-4 rounded-2xl border border-slate-200 bg-white px-5 shadow-sm">
           {foods.map((food) => (
             <FoodItem
-              key={food.id}
+              key={food._id}
               name={food.name}
               meal={food.meal}
               calories={food.calories}
