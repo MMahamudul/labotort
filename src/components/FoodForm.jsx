@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import {useEffect,  useState } from 'react'
 
-const FoodForm = ({ onAddFood }) => {
+const FoodForm = ({ onAddFood, onUpdateFood, editingFood}) => {
   const [formData, setFormData] = useState({
     name: '',
     meal: '',
@@ -9,6 +9,19 @@ const FoodForm = ({ onAddFood }) => {
     carbs: '',
     fat: '',
   })
+
+  useEffect(() => {
+  if (editingFood) {
+    setFormData({
+      name: editingFood.name,
+      meal: editingFood.meal,
+      calories: editingFood.calories,
+      protein: editingFood.protein,
+      carbs: editingFood.carbs,
+      fat: editingFood.fat,
+    })
+  }
+}, [editingFood])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -31,7 +44,11 @@ const FoodForm = ({ onAddFood }) => {
     fat: Number(formData.fat),
   }
 
-  await onAddFood(foodData)
+  if (editingFood) {
+    await onUpdateFood(editingFood._id, foodData)
+  } else {
+    await onAddFood(foodData)
+  }
 
   setFormData({
     name: '',
@@ -49,8 +66,8 @@ const FoodForm = ({ onAddFood }) => {
   className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
 >
       <h2 className="text-lg font-semibold text-slate-900">
-        Add Food
-      </h2>
+  {editingFood ? 'Edit Food' : 'Add Food'}
+</h2>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <input
@@ -116,7 +133,7 @@ const FoodForm = ({ onAddFood }) => {
         type="submit"
         className="mt-5 rounded-lg bg-slate-900 px-4 py-2 font-medium text-white"
       >
-        Save Food
+        {editingFood ? 'Update Food' : 'Save Food'}
       </button>
     </form>
   )

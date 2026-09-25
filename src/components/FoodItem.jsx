@@ -1,4 +1,9 @@
-const FoodItem = ({ name, meal, calories, onDelete }) => {
+const FoodItem = ({ name,
+   meal, 
+   calories, 
+   onDelete, 
+   onEdit 
+  }) => {
   return (
     <div className="flex items-center justify-between border-b border-slate-100 py-4 last:border-0">
       <div>
@@ -14,6 +19,13 @@ const FoodItem = ({ name, meal, calories, onDelete }) => {
       <p className="font-semibold text-slate-700">
         {calories} kcal
       </p>
+        <button
+  type="button"
+  onClick={onEdit}
+  className="text-sm font-medium text-blue-600 hover:text-blue-700"
+>
+  Edit
+</button>
       <button
           type="button"
           onClick={onDelete}
@@ -21,6 +33,7 @@ const FoodItem = ({ name, meal, calories, onDelete }) => {
         >
           Delete
         </button>
+      
     </div>
   )
 }

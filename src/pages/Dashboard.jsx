@@ -8,10 +8,12 @@ import {
   getFoods,
   createFood,
   deleteFood,
+  updateFood
 } from '../services/foodApi.js'
 
 const Dashboard = () => {
   const [foods, setFoods] = useState([])
+  const [editingFood, setEditingFood] = useState(null)
 
 
   // GET foods from backend
@@ -41,7 +43,29 @@ const handleAddFood = async (foodData) => {
     console.error('Error creating food:', error)
   }
 }
+// Update Food
 
+const handleUpdateFood = async (id, foodData) => {
+  try {
+    const updatedFood = await updateFood(id, foodData)
+
+    setFoods((previousFoods) =>
+      previousFoods.map((food) =>
+        food._id === id ? updatedFood : food
+      )
+    )
+
+    setEditingFood(null)
+  } catch (error) {
+    console.error('Error updating food:', error)
+  }
+}
+
+const handleEditFood = (food) => {
+  setEditingFood(food)
+}
+
+// Delete Food
 const handleDeleteFood = async (id) => {
   try {
     await deleteFood(id)
@@ -97,6 +121,8 @@ const macros = [
   },
 ]
 
+console.log('Editing food:', editingFood)
+
   return (
     <div>
       
@@ -137,7 +163,11 @@ const macros = [
 
       {/* Add Food Form */}
       <section className="mt-8">
-        <FoodForm onAddFood={handleAddFood} />
+   <FoodForm
+  onAddFood={handleAddFood}
+  onUpdateFood={handleUpdateFood}
+  editingFood={editingFood}
+/>
       </section>
 
       {/* Today's Meals */}
@@ -153,6 +183,7 @@ const macros = [
               name={food.name}
               meal={food.meal}
               calories={food.calories}
+              onEdit={() => handleEditFood(food)}
               onDelete={() => handleDeleteFood(food._id)}
             />
           ))}

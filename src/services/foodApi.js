@@ -49,3 +49,23 @@ export const deleteFood = async (id) => {
 
   return data
 }
+
+export const updateFood = async (id, foodData) => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: 'PUT',
+
+    headers: {
+      'Content-Type': 'application/json',
+    },
+
+    body: JSON.stringify(foodData),
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to update food')
+  }
+
+  const data = await response.json()
+
+  return data
+}
