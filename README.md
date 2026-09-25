@@ -1,4 +1,4 @@
-# Nutrition Tracker
+# BiteScale
 
 This is a simple full-stack nutrition tracker project I made to practice React, Node.js, Express and MongoDB.
 
