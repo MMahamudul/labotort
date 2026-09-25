@@ -2,71 +2,117 @@ import { useEffect, useState } from 'react'
 import CalorieSummary from '../components/CalorieSummary.jsx'
 import MacroCard from '../components/MacroCard.jsx'
 import FoodItem from '../components/FoodItem.jsx'
-import { getFoods } from '../services/foodApi.js'
-  
+import FoodForm from '../components/FoodForm.jsx'
+
+import {
+  getFoods,
+  createFood,
+  deleteFood,
+} from '../services/foodApi.js'
 
 const Dashboard = () => {
   const [foods, setFoods] = useState([])
-  // Macronutrient data
-  const macros = [
-    {
-      id: 1,
-      name: 'Protein',
-      consumed: 82,
-      goal: 120,
-      unit: 'g',
-    },
-    {
-      id: 2,
-      name: 'Carbs',
-      consumed: 145,
-      goal: 220,
-      unit: 'g',
-    },
-    {
-      id: 3,
-      name: 'Fat',
-      consumed: 46,
-      goal: 65,
-      unit: 'g',
-    },
-  ]
 
-  // Food data
+
+  // GET foods from backend
   useEffect(() => {
-  const fetchFoods = async () => {
-    try {
-      const data = await getFoods()
-
-      setFoods(data)
-    } catch (error) {
-      console.error('Error fetching foods:', error)
+    const fetchFoods = async () => {
+      try {
+        const data = await getFoods()
+        setFoods(data)
+      } catch (error) {
+        console.error('Error fetching foods:', error)
+      }
     }
-  }
 
-  fetchFoods()
-}, [])
+    fetchFoods()
+  }, [])
+// Add Food
+
+const handleAddFood = async (foodData) => {
+  try {
+    const newFood = await createFood(foodData)
+
+    setFoods((previousFoods) => [
+      ...previousFoods,
+      newFood,
+    ])
+  } catch (error) {
+    console.error('Error creating food:', error)
+  }
+}
+
+const handleDeleteFood = async (id) => {
+  try {
+    await deleteFood(id)
+
+    setFoods((previousFoods) =>
+      previousFoods.filter((food) => food._id !== id)
+    )
+  } catch (error) {
+    console.error('Error deleting food:', error)
+  }
+}
+
+ const totalCalories = foods.reduce((total, food) => {
+  return total + food.calories
+}, 0)
+
+// Calculate totals from foods
+const totalProtein = foods.reduce(
+  (total, food) => total + food.protein,
+  0
+)
+
+const totalCarbs = foods.reduce(
+  (total, food) => total + food.carbs,
+  0
+)
+
+const totalFat = foods.reduce(
+  (total, food) => total + food.fat,
+  0
+)
+const macros = [
+  {
+    id: 1,
+    name: 'Protein',
+    consumed: totalProtein,
+    goal: 120,
+    unit: 'g',
+  },
+  {
+    id: 2,
+    name: 'Carbs',
+    consumed: totalCarbs,
+    goal: 220,
+    unit: 'g',
+  },
+  {
+    id: 3,
+    name: 'Fat',
+    consumed: totalFat,
+    goal: 65,
+    unit: 'g',
+  },
+]
 
   return (
     <div>
-      {/* Dashboard heading */}
-      <p className="text-sm font-medium text-slate-500">
-        Saturday, September 20
-      </p>
-
-      <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
-        Nutrition Dashboard
+      
+      <h1 className="mt-1 text-4xl font-bold tracking-tight text-slate-900">
+        BiteScale
       </h1>
 
-      <p className="mt-2 text-slate-500">
-        Keep track of your daily nutrition goals.
-      </p>
+      <h3 className="mt-2 text-slate-500">
+        Keep track of your daily calorie goals.
+      </h3>
 
-      {/* Calorie summary */}
+      {/* Calories */}
       <div className="mt-8">
-        <CalorieSummary
-          consumed={1420}
-          goal={2000}
+        <CalorieSummary 
+        consumed={totalCalories} 
+        goal={2000} 
         />
       </div>
 
@@ -89,17 +135,16 @@ const Dashboard = () => {
         </div>
       </section>
 
-      {/* Today's meals */}
+      {/* Add Food Form */}
       <section className="mt-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">
-            Today's Meals
-          </h2>
+        <FoodForm onAddFood={handleAddFood} />
+      </section>
 
-          <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white">
-            + Add Food
-          </button>
-        </div>
+      {/* Today's Meals */}
+      <section className="mt-8">
+        <h2 className="text-lg font-semibold text-slate-900">
+          Today's Meals
+        </h2>
 
         <div className="mt-4 rounded-2xl border border-slate-200 bg-white px-5 shadow-sm">
           {foods.map((food) => (
@@ -108,6 +153,7 @@ const Dashboard = () => {
               name={food.name}
               meal={food.meal}
               calories={food.calories}
+              onDelete={() => handleDeleteFood(food._id)}
             />
           ))}
         </div>
