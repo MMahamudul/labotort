@@ -1,16 +1,55 @@
-# React + Vite
+# Nutrition Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple full-stack nutrition tracker project I made to practice React, Node.js, Express and MongoDB.
 
-Currently, two official plugins are available:
+Users can add food, edit it and delete it. The app also calculates total calories, remaining calories, protein, carbs and fat.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Technologies
 
-## React Compiler
+- React
+- JavaScript
+- Tailwind CSS
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- Add food
+- Edit food
+- Delete food
+- Track calories
+- Track protein, carbs and fat
+- Save data in MongoDB
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Project Structure
+
+src/
+├── components/
+│   ├── CalorieSummary.jsx
+│   ├── FoodForm.jsx
+│   ├── FoodItem.jsx
+│   ├── MacroCard.jsx
+│   └── ProgressBar.jsx
+│
+├── pages/
+│   └── Dashboard.jsx
+│
+├── services/
+│   └── foodApi.js
+│
+├── App.jsx
+└── main.jsx
+
+server/
+├── config/
+│   └── db.js
+├── controllers/
+│   └── foodController.js
+├── models/
+│   └── Food.js
+├── routes/
+│   └── foodRoutes.js
+└── server.js
+```
